@@ -1,80 +1,79 @@
-# 杰哥記帳 - 前端
+# 社畜加班紀錄器 - 前端 (Overwork Tracker)
 
-基於 Google Sheets 的個人記帳系統前端介面。
+專為社畜打造的加班時數紀錄系統，每一分鐘的加班，都是為了更美好的...退休？
+基於 Google Sheets 作為資料庫，資料完全掌握在自己手中。
 
-## 功能特色
+## ✨ 功能特色
 
-- 💰 **預算管理**：設定每月預算，即時顯示剩餘金額與進度條
-- 📊 **收支統計**：自動計算本月收入、支出與結餘
-- 🏷️ **分類管理**：自訂類別並設定專屬色碼
-- ✏️ **記帳編輯**：新增、編輯、刪除交易紀錄
-- 📱 **響應式設計**：支援桌面與手機瀏覽器
-- 🎨 **清新介面**：柔和配色與流暢動畫
+- ⏱ **即時統計**：登入即顯示本月與上月累積加班時數，時刻提醒自己是否太奴。
+- 🌡 **熱力圖分析**：由淺至深的綠色方塊，視覺化呈現近 4 週的加班強度（顏色越深，代表你越操！）。
+- 📊 **報表匯出**：一鍵匯出上個月的加班紀錄 (CSV)，整理加班費申報資料不再頭痛。
+- 📝 **簡單紀錄**：快速紀錄加班日期、時數、原因與備註。
+- ☁️ **雲端同步**：資料儲存於 Google Sheets，支援跨裝置存取。
+- 📱 **RWD 設計**：手機、電腦都能完美顯示。
 
-## 技術棧
+## 🛠 技術棧
 
-- **純前端**：HTML + CSS + Vanilla JavaScript
-- **UI 框架**：SweetAlert2（彈窗提示）
-- **字體**：Zen Maru Gothic + Varela Round
-- **API 通訊**：Fetch API
+- **Core**: HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **UI Component**: SweetAlert2 (為了漂亮的彈窗)
+- **Styling**: CSS Variables, Grid/Flexbox Layout
+- **Font**: Zen Maru Gothic (圓體字型，讓加班看起來沒那麼沈重)
+- **API**: Fetch API
 
-## 檔案結構
+## 📂 檔案結構
 
 ```
 frontend/
-├── index.html      # 主頁面
-├── style.css       # 樣式表
-├── app.js          # 主要邏輯
-├── config.js       # API 設定
-├── icon.png        # 網站圖標
-└── README.md       # 本文件
+├── index.html      # 應用程式主入口
+├── style.css       # 樣式表 (包含 RWD 與熱力圖樣式)
+├── app.js          # 核心邏輯 (Auth, CRUD, 匯出, 熱力圖計算)
+├── config.js       # API 連線設定
+├── icon.png        # Favicon
+└── README.md       # 說明文件
 ```
 
-## 快速開始
+## 🚀 快速開始
 
-### 1. 設定 API 網址
+### 1. 修改 API 連線
 
-編輯 `config.js`，將 API_BASE_URL 改成你的後端網址：
+打開 `config.js`，將網址修改為你的後端服務位址（本地開發或 Zeabur 網址）：
 
 ```javascript
 const CONFIG = {
-  API_BASE_URL: "https://your-backend.zeabur.app",
+  // API_BASE_URL: "http://localhost:3000",
+  API_BASE_URL: "https://your-app.zeabur.app", 
 };
 ```
 
-## 使用說明
+### 2. 啟動
 
-### 登入
+直接用瀏覽器打開 `index.html`，或使用 Live Server 啟動。
 
-- 預設帳號密碼請參考後端設定的環境變數
-- 登入後 JWT Token 會儲存在 localStorage
+## 📖 使用說明
 
-### 預算設定
+### 註冊/登入
+- 首次使用請點擊「還沒加入？點我註冊」。
+- 輸入帳號、顯示名稱與密碼即可建立帳號。
 
-- 點擊「本月還能花」區塊可設定每月預算
-- 進度條會根據支出比例變色（綠 → 黃 → 紅）
+### 紀錄加班
+1. 點擊主畫面下方的「✍️ 紀錄加班」按鈕。
+2. 選擇日期、輸入時數（支援 0.5 小時）、原因（如：趕專案、開會）。
+3. 按下紀錄即可。
 
-### 記帳流程
+### 匯出報表
+1. 點擊主畫面下方的「📊 匯出上月報表」按鈕。
+2. 系統會自動篩選上個月的所有紀錄。
+3. 下載 `.csv` 檔案，可用 Excel 或 Google Sheets 開啟。
 
-1. 點擊「記一筆」按鈕
-2. 依序填寫：項目名稱 → 類別 → 金額 → 收支 → 日期
-3. 點擊「記帳！」完成
+### 熱力圖 (Heatmap)
+- 位於首頁中段，顯示過去 4 週 (28天) 的加班狀況。
+- **等級說明**：
+  - ⬜️ 無加班
+  - 🟢 < 1 小時 (輕度)
+  - 🌿 1-2 小時 (中度)
+  - 🌳 2-4 小時 (重度)
+  - 🌲 > 4 小時 (極度過勞)
 
-### 分類管理
+## 📄 License
 
-- 點擊「管理分類」可新增/編輯/刪除類別
-- 每個類別可設定專屬色碼
-- 預設「未分類」類別無法刪除
-
-## 瀏覽器支援
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-- iOS Safari 14+
-- Android Chrome 90+
-
-## License
-
-MIT
+MIT License
