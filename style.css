@@ -1,13 +1,20 @@
 /* ===== CSS Variables ===== */
 :root {
-  --primary-bg: #f0f6e3; /* 柔和的米綠色背景 */
-  --card-bg: #fffdf5; /* 米白卡片 */
-  --text-color: #584c42; /* 深咖啡色文字 */
-  --text-light: #8b7d70; /* 淺一點的文字 */
-  --primary-green: #5abf98; /* 主色綠 */
+  --primary-bg: #f0f6e3;
+  /* 柔和的米綠色背景 */
+  --card-bg: #fffdf5;
+  /* 米白卡片 */
+  --text-color: #584c42;
+  /* 深咖啡色文字 */
+  --text-light: #8b7d70;
+  /* 淺一點的文字 */
+  --primary-green: #5abf98;
+  /* 主色綠 */
   --primary-green-dark: #3a8f70;
-  --primary-blue: #55a4e8; /* 天空藍 */
-  --primary-yellow: #f9d065; /* 金黃色 */
+  --primary-blue: #55a4e8;
+  /* 天空藍 */
+  --primary-yellow: #f9d065;
+  /* 金黃色 */
   --primary-red: #ff7675;
   --border-color: #e0dacc;
   --radius: 24px;
@@ -15,7 +22,9 @@
 }
 
 /* ===== Reset & Base ===== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -38,7 +47,8 @@ body {
 }
 
 .app {
-  max-width: 600px; /* 手機風格 */
+  max-width: 600px;
+  /* 手機風格 */
   margin: 0 auto;
   padding: 20px;
   min-height: 100vh;
@@ -59,8 +69,15 @@ body {
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ===== Landing Section ===== */
@@ -158,7 +175,8 @@ h1 {
   color: var(--primary-green-dark);
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid var(--border-color);
@@ -171,7 +189,8 @@ input, select {
   transition: border-color 0.2s;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   border-color: var(--primary-green);
 }
 
@@ -312,13 +331,13 @@ input:focus, select:focus {
   padding: 12px 20px;
   border-radius: 18px;
   min-width: 120px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.03);
   border: 2px solid transparent;
 }
 
 .stat-item.active {
-    border-color: var(--primary-green);
-    background-color: #f0fdf4;
+  border-color: var(--primary-green);
+  background-color: #f0fdf4;
 }
 
 @media (max-width: 767px) {
@@ -326,7 +345,7 @@ input:focus, select:focus {
     gap: 10px;
     margin-top: 16px;
   }
-  
+
   .stat-item {
     padding: 10px 16px;
     min-width: 100px;
@@ -341,19 +360,19 @@ input:focus, select:focus {
 }
 
 .stat-item .unit {
-    font-size: 0.8rem;
-    color: #9ca095;
-    margin-left: 4px;
+  font-size: 0.8rem;
+  color: #9ca095;
+  margin-left: 4px;
 }
 
 .stat-item .amount {
-    color: var(--text-color);
-    font-weight: 700;
-    font-size: 1.5rem;
+  color: var(--text-color);
+  font-weight: 700;
+  font-size: 1.5rem;
 }
 
 .stat-item.active .amount {
-    color: var(--primary-green);
+  color: var(--primary-green);
 }
 
 /* Action Grid */
@@ -395,13 +414,15 @@ input:focus, select:focus {
 }
 
 .action-card.income {
-  background: #e3f6f5; /* 淡藍綠 */
+  background: #e3f6f5;
+  /* 淡藍綠 */
   box-shadow: 0 6px 0 #b8e0de;
   color: var(--primary-green-dark);
 }
 
 .action-card.expense {
-  background: #fff0f0; /* 淡粉紅 */
+  background: #fff0f0;
+  /* 淡粉紅 */
   box-shadow: 0 6px 0 #ffccd2;
   color: #d65d5d;
 }
@@ -417,7 +438,7 @@ input:focus, select:focus {
 
 .action-card .icon {
   font-size: 2.4rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* Transaction List */
@@ -444,7 +465,7 @@ input:focus, select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s;
   border: 2px solid transparent;
 }
@@ -463,15 +484,16 @@ input:focus, select:focus {
 .transaction-item .category-icon {
   width: 48px;
   height: 48px;
-  border-radius: 16px; /* 圓角矩形更現代 */
+  border-radius: 16px;
+  /* 圓角矩形更現代 */
   background: var(--primary-bg);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.4rem;
   color: white;
-  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .transaction-item .info {
@@ -505,8 +527,13 @@ input:focus, select:focus {
   letter-spacing: 0.5px;
 }
 
-.transaction-item .amount.income { color: var(--primary-green); }
-.transaction-item .amount.expense { color: var(--primary-red); }
+.transaction-item .amount.income {
+  color: var(--primary-green);
+}
+
+.transaction-item .amount.expense {
+  color: var(--primary-red);
+}
 
 .edit-btn,
 .delete-btn {
@@ -521,7 +548,8 @@ input:focus, select:focus {
   justify-content: center;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   margin-left: 8px;
-  opacity: 1; /* 手機預設顯示 */
+  opacity: 1;
+  /* 手機預設顯示 */
   transform: scale(1);
 }
 
@@ -547,6 +575,7 @@ input:focus, select:focus {
 
 /* 桌面版：預設隱藏，hover 才顯示 */
 @media (min-width: 768px) {
+
   .edit-btn,
   .delete-btn {
     opacity: 0;
@@ -572,7 +601,8 @@ div:where(.swal2-container) div:where(.swal2-popup) {
   text-align: left;
 }
 
-.swal2-input, .swal2-select {
+.swal2-input,
+.swal2-select {
   width: 100% !important;
   margin: 0 0 16px !important;
   box-sizing: border-box !important;
@@ -590,7 +620,7 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 }
 
 .budget-main-display:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
@@ -630,7 +660,7 @@ div:where(.swal2-container) div:where(.swal2-popup) {
   background-color: #e8e8e8;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 8px;
 }
 
@@ -657,8 +687,119 @@ div:where(.swal2-container) div:where(.swal2-popup) {
     margin-bottom: 20px;
     letter-spacing: -1px;
   }
-  
+
   .budget-main-display {
     padding: 8px 16px 20px;
   }
+}
+
+/* ===== Heatmap Analysis ===== */
+.analysis-card {
+  background: white;
+  padding: 24px;
+  border-radius: 28px;
+  border: 3px solid transparent;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
+  margin-bottom: 24px;
+}
+
+.analysis-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #8b7d70;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.heatmap-day {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background-color: #f0f6e3;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.heatmap-day:hover {
+  transform: scale(1.1);
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.heatmap-day::after {
+  content: attr(data-date);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 4px;
+}
+
+.heatmap-day:hover::after {
+  opacity: 1;
+}
+
+/* Heatmap Intensity Levels */
+.heatmap-day.level-0 {
+  background-color: #f0f6e3;
+}
+
+.heatmap-day.level-1 {
+  background-color: #c8e6c9;
+}
+
+/* < 1hr */
+.heatmap-day.level-2 {
+  background-color: #81c784;
+}
+
+/* 1-2hr */
+.heatmap-day.level-3 {
+  background-color: #4caf50;
+}
+
+/* 2-4hr */
+.heatmap-day.level-4 {
+  background-color: #2e7d32;
+}
+
+/* > 4hr */
+
+.heatmap-legend {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 0.75rem;
+  color: #9ca095;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-box {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
 }

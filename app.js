@@ -25,6 +25,8 @@ const lastMonthHoursEl = document.getElementById("last-month-hours");
 const currentMonthHoursEl = document.getElementById("current-month-hours");
 const worklogList = document.getElementById("worklog-list");
 const btnAddWorklog = document.getElementById("btn-add-worklog");
+const btnExport = document.getElementById("btn-export");
+const heatmapGrid = document.getElementById("heatmap-grid");
 
 // ===== API Helper =====
 async function api(endpoint, options = {}) {
@@ -133,6 +135,7 @@ async function loadWorklogs() {
     worklogs = data.data || [];
     renderWorklogs();
     updateSummary();
+    renderHeatmap();
   } catch (error) {
     console.error(error);
   }
@@ -222,6 +225,87 @@ function updateSummary() {
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   });
+}
+
+function renderHeatmap() {
+  if (!heatmapGrid) return;
+  heatmapGrid.innerHTML = "";
+
+  const today = new Date();
+  // Generate last 28 days (4 weeks)
+  const days = [];
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    days.push(d);
+  }
+
+  // Aggregate hours
+  const hoursMap = {};
+  worklogs.forEach((log) => {
+    const dateStr = formatExcelDate(log.date);
+    if (!hoursMap[dateStr]) hoursMap[dateStr] = 0;
+    hoursMap[dateStr] += Number(log.duration_hours);
+  });
+
+  days.forEach((date) => {
+    const dateStr = date.toISOString().split("T")[0];
+    const hours = hoursMap[dateStr] || 0;
+
+    let level = 0;
+    if (hours > 0) level = 1;
+    if (hours >= 1) level = 2; // >= 1
+    if (hours >= 2) level = 3; // >= 2
+    if (hours >= 4) level = 4; // >= 4
+
+    const el = document.createElement("div");
+    el.className = `heatmap-day level-${level}`;
+    el.dataset.date = `${dateStr.slice(5)}: ${hours}hr`; // Show MM-DD
+    el.title = `${dateStr}: ${hours}小時`;
+    heatmapGrid.appendChild(el);
+  });
+}
+
+function exportLastMonthReport() {
+  const now = new Date();
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const targetYear = lastMonthDate.getFullYear();
+  const targetMonth = lastMonthDate.getMonth(); // 0-based
+
+  const targetLogs = worklogs.filter((log) => {
+    const d = new Date(formatExcelDate(log.date));
+    return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
+  });
+
+  if (targetLogs.length === 0) {
+    Swal.fire("沒資料", "上個月沒有加班紀錄 (是好事還是壞事？)", "info");
+    return;
+  }
+
+  // Sort by date
+  targetLogs.sort((a, b) => {
+    return new Date(formatExcelDate(a.date)) - new Date(formatExcelDate(b.date));
+  });
+
+  let csvContent = "\uFEFF"; // BOM for Excel encoding
+  csvContent += "日期,時數,原因,備註\n";
+
+  targetLogs.forEach((log) => {
+    const date = formatExcelDate(log.date);
+    const reason = (log.reason || "").replace(/,/g, "，").replace(/\n/g, " ");
+    const notes = (log.notes || "").replace(/,/g, "，").replace(/\n/g, " ");
+    csvContent += `${date},${log.duration_hours},${reason},${notes}\n`;
+  });
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `加班報表_${targetYear}_${targetMonth + 1}.csv`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 // ===== Modals =====
@@ -427,6 +511,7 @@ registerForm.addEventListener("submit", async (e) => {
 
 logoutBtn.addEventListener("click", logout);
 btnAddWorklog.addEventListener("click", openAddWorklogModal);
+btnExport.addEventListener("click", exportLastMonthReport);
 
 // ===== Initialize =====
 async function init() {
