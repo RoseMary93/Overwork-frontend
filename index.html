@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>杰哥記帳</title>
+    <title>社畜加班紀錄器</title>
     <link rel="icon" type="image/png" href="./icon.png">
-    <link rel="apple-touch-icon" href="./icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- 圓體字型 -->
@@ -25,31 +23,59 @@
         <!-- 歡迎畫面 (Landing) -->
         <section id="landing-section" class="section landing-container">
             <div class="landing-card">
-                <div class="app-logo">💰</div>
-                <h1>杰哥的<br>私房錢記帳助手</h1>
-                <p class="subtitle">噓...這裡沒有發票，<br>只有男人的快樂與夢想！</p>
-                <button id="go-login-btn" class="btn btn-primary btn-lg">開啟小金庫</button>
+                <div class="app-logo">⏰</div>
+                <h1>社畜的<br>加班時數紀錄</h1>
+                <p class="subtitle">每一分鐘的加班，<br>都是為了更美好的...退休？</p>
+                <button id="go-login-btn" class="btn btn-primary btn-lg">登入紀錄</button>
+                <div style="margin-top: 10px;">
+                    <a href="#" id="go-register-link" style="color: #666; font-size: 0.9em;">還沒加入？點我註冊</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 註冊畫面 -->
+        <section id="register-section" class="section hidden">
+            <div class="login-card">
+                <button class="btn-icon back-btn" onclick="showLanding()">←</button>
+                <div class="app-logo small">📝</div>
+                <h2>新社畜報到</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-username">設定帳號</label>
+                        <input type="text" id="reg-username" required autocomplete="username" placeholder="請輸入帳號">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-display-name">顯示名稱</label>
+                        <input type="text" id="reg-display-name" required placeholder="例如：苦命小陳">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">設定密碼</label>
+                        <input type="password" id="reg-password" required autocomplete="new-password"
+                            placeholder="請輸入密碼">
+                    </div>
+                    <button type="submit" class="btn btn-primary">註冊並登入</button>
+                </form>
             </div>
         </section>
 
         <!-- 登入畫面 -->
         <section id="login-section" class="section hidden">
             <div class="login-card">
-                <button id="back-to-landing" class="btn-icon back-btn">←</button>
-                <div class="app-logo small">💰</div>
-                <h2>金庫登入</h2>
+                <button class="btn-icon back-btn" onclick="showLanding()">←</button>
+                <div class="app-logo small">⏰</div>
+                <h2>加班登入</h2>
                 <form id="login-form">
                     <div class="form-group">
-                        <label for="username">使用者名稱</label>
+                        <label for="username">帳號</label>
                         <input type="text" id="username" name="username" required autocomplete="username"
                             placeholder="請輸入帳號">
                     </div>
                     <div class="form-group">
-                        <label for="password">通關密碼</label>
+                        <label for="password">密碼</label>
                         <input type="password" id="password" name="password" required autocomplete="current-password"
                             placeholder="請輸入密碼">
                     </div>
-                    <button type="submit" class="btn btn-primary">解鎖金庫</button>
+                    <button type="submit" class="btn btn-primary">登入</button>
                     <p id="login-error" class="error-msg"></p>
                 </form>
             </div>
@@ -59,55 +85,35 @@
         <section id="main-section" class="section hidden">
             <header class="header">
                 <div class="brand">
-                    <span class="app-logo small">💰</span>
-                    <span id="welcome-msg">歡迎回來！</span>
+                    <span class="app-logo small">⏰</span>
+                    <span id="welcome-msg">歡迎回來</span>
                 </div>
                 <button id="logout-btn" class="btn btn-sm btn-secondary">登出</button>
             </header>
 
-            <!-- 帳戶統計 -->
+            <!-- 統計卡片 -->
             <div class="bells-card">
-                <div class="budget-main-display" id="budget-section">
-                    <span class="label-lg">本月還能花</span>
-                    <div class="amount-hero" id="budget-remaining">$0</div>
-
-                    <div class="progress-bar-bg">
-                        <div id="budget-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
-                    </div>
+                <div class="budget-main-display">
+                    <span class="label-lg">累計加班時數</span>
+                    <div class="amount-hero" id="total-hours">0</div>
                     <div class="budget-meta">
-                        <span>總預算: <span id="total-budget">$0</span></span>
-                        <span id="budget-percent">0%</span>
-                    </div>
-                </div>
-
-                <div class="bell-stats">
-                    <div class="stat-item income">
-                        <span class="label">本月收入</span>
-                        <span id="total-income" class="amount">0</span>
-                    </div>
-                    <div class="stat-item expense">
-                        <span class="label">本月支出</span>
-                        <span id="total-expense" class="amount">0</span>
+                        <span>加油，好嗎？</span>
                     </div>
                 </div>
             </div>
 
             <!-- 功能按鈕區 -->
-            <div class="action-grid">
-                <button id="btn-add-transaction" class="action-card income">
-                    <span class="icon">✏️</span>
-                    <span>記一筆</span>
-                </button>
-                <button id="btn-manage-category" class="action-card expense">
-                    <span class="icon">🗂️</span>
-                    <span>管理分類</span>
+            <div class="action-grid" style="grid-template-columns: 1fr;">
+                <button id="btn-add-worklog" class="action-card income">
+                    <span class="icon">✍️</span>
+                    <span>紀錄加班</span>
                 </button>
             </div>
 
-            <!-- 交易紀錄 -->
+            <!-- 紀錄列表 -->
             <div class="list-container">
-                <h3 id="transaction-list-title">11月收支</h3>
-                <div id="transaction-list" class="transaction-list">
+                <h3 id="list-title">近期紀錄</h3>
+                <div id="worklog-list" class="transaction-list">
                     <!-- 動態載入 -->
                 </div>
             </div>
@@ -115,36 +121,7 @@
 
     </div>
 
-    <!-- 隱藏的 Template 用於 SweetAlert -->
-    <template id="tpl-transaction-form">
-        <form id="swal-txn-form" class="swal-form">
-            <div class="form-group">
-                <label>日期</label>
-                <input type="date" id="swal-date" class="swal2-input" required>
-            </div>
-            <div class="form-group">
-                <label>收支</label>
-                <select id="swal-type" class="swal2-select">
-                    <option value="expense">支出</option>
-                    <option value="income">收入</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>類別</label>
-                <select id="swal-category" class="swal2-select">
-                    <!-- JS 填入 -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label>金額</label>
-                <input type="number" id="swal-amount" class="swal2-input" placeholder="多少錢？" min="1" required>
-            </div>
-            <div class="form-group">
-                <label>備註</label>
-                <input type="text" id="swal-note" class="swal2-input" placeholder="例如：買卡片、聚餐">
-            </div>
-        </form>
-    </template>
+    <!-- 隱藏的 Template 用於 SweetAlert (給 JS 參考用，實際用 JS 生成 HTML) -->
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="config.js"></script>
