@@ -313,6 +313,12 @@ input:focus, select:focus {
   border-radius: 18px;
   min-width: 120px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+  border: 2px solid transparent;
+}
+
+.stat-item.active {
+    border-color: var(--primary-green);
+    background-color: #f0fdf4;
 }
 
 @media (max-width: 767px) {
@@ -334,8 +340,21 @@ input:focus, select:focus {
   margin-bottom: 4px;
 }
 
-.stat-item.income .amount { color: var(--primary-green); }
-.stat-item.expense .amount { color: var(--primary-red); }
+.stat-item .unit {
+    font-size: 0.8rem;
+    color: #9ca095;
+    margin-left: 4px;
+}
+
+.stat-item .amount {
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.stat-item.active .amount {
+    color: var(--primary-green);
+}
 
 /* Action Grid */
 .action-grid {

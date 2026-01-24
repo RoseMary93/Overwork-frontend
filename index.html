@@ -93,12 +93,20 @@
 
             <!-- 統計卡片 -->
             <div class="bells-card">
-                <div class="budget-main-display">
-                    <span class="label-lg">累計加班時數</span>
-                    <div class="amount-hero" id="total-hours">0</div>
-                    <div class="budget-meta">
-                        <span>加油，好嗎？</span>
+                <div class="bell-stats">
+                    <div class="stat-item">
+                        <span class="label">上個月加班</span>
+                        <span id="last-month-hours" class="amount">0</span>
+                        <span class="unit">hr</span>
                     </div>
+                    <div class="stat-item active">
+                        <span class="label">本月加班</span>
+                        <span id="current-month-hours" class="amount">0</span>
+                        <span class="unit">hr</span>
+                    </div>
+                </div>
+                <div class="budget-meta" style="margin-top: 15px; text-align: center;">
+                    <span>加油，好嗎？</span>
                 </div>
             </div>
 

@@ -21,7 +21,8 @@ const loginError = document.getElementById("login-error");
 // Main UI
 const welcomeMsg = document.getElementById("welcome-msg");
 const logoutBtn = document.getElementById("logout-btn");
-const totalHoursEl = document.getElementById("total-hours");
+const lastMonthHoursEl = document.getElementById("last-month-hours");
+const currentMonthHoursEl = document.getElementById("current-month-hours");
 const worklogList = document.getElementById("worklog-list");
 const btnAddWorklog = document.getElementById("btn-add-worklog");
 
@@ -112,6 +113,19 @@ function showMain() {
   loadWorklogs();
 }
 
+// ===== Helper Functions =====
+function formatExcelDate(value) {
+  if (!value) return "";
+  // Check if it's a serial number (e.g., 46046)
+  if (!isNaN(value) && !value.toString().includes("-")) {
+    // Excel base date is 1899-12-30
+    const date = new Date(Math.round((value - 25569) * 86400 * 1000));
+    return date.toISOString().split("T")[0];
+  }
+  // Assume it's already a date string
+  return value;
+}
+
 // ===== Data Loading =====
 async function loadWorklogs() {
   try {
@@ -134,8 +148,9 @@ function renderWorklogs() {
   }
 
   worklogList.innerHTML = worklogs
-    .map(
-      (log) => `
+    .map((log) => {
+      const displayDate = formatExcelDate(log.date);
+      return `
       <div class="transaction-item">
         <div class="left">
           <div class="category-icon" style="background-color: #5abf98;">
@@ -143,7 +158,7 @@ function renderWorklogs() {
           </div>
           <div class="info">
             <span class="note">${log.reason}</span>
-            <span class="meta">${log.date} ${log.notes ? `· ${log.notes}` : ""
+            <span class="meta">${displayDate} ${log.notes ? `· ${log.notes}` : ""
         }</span>
           </div>
         </div>
@@ -157,18 +172,53 @@ function renderWorklogs() {
         }')">✕</button>
         </div>
       </div>
-    `
-    )
+    `;
+    })
     .join("");
 }
 
 function updateSummary() {
-  // Calculate total hours
-  const total = worklogs.reduce(
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-based
+
+  // Calculate Last Month
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonthYear = lastMonthDate.getFullYear();
+  const lastMonth = lastMonthDate.getMonth();
+
+  const currentMonthLogs = worklogs.filter((log) => {
+    const formattedDate = formatExcelDate(log.date);
+    const logDate = new Date(formattedDate);
+    return (
+      logDate.getFullYear() === currentYear && logDate.getMonth() === currentMonth
+    );
+  });
+
+  const lastMonthLogs = worklogs.filter((log) => {
+    const formattedDate = formatExcelDate(log.date);
+    const logDate = new Date(formattedDate);
+    return (
+      logDate.getFullYear() === lastMonthYear && logDate.getMonth() === lastMonth
+    );
+  });
+
+  const currentTotal = currentMonthLogs.reduce(
     (sum, log) => sum + Number(log.duration_hours),
     0
   );
-  totalHoursEl.textContent = total.toLocaleString(undefined, {
+
+  const lastTotal = lastMonthLogs.reduce(
+    (sum, log) => sum + Number(log.duration_hours),
+    0
+  );
+
+  currentMonthHoursEl.textContent = currentTotal.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 1,
+  });
+
+  lastMonthHoursEl.textContent = lastTotal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   });
@@ -255,7 +305,7 @@ window.editWorklog = async function (id) {
       <form id="swal-form" class="swal-form">
         <div class="form-group">
           <label>日期</label>
-          <input type="date" id="swal-date" class="swal2-input" value="${log.date
+          <input type="date" id="swal-date" class="swal2-input" value="${formatExcelDate(log.date)
       }" required>
         </div>
         <div class="form-group">
