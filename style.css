@@ -190,9 +190,16 @@ select {
   font-family: inherit;
   font-size: 1rem;
   color: #f9d065;
-  /* 改為米黃色 */
+  /* 使用者輸入為亮黃色 */
+  font-weight: 600;
   outline: none;
   transition: border-color 0.2s, background 0.2s;
+}
+
+input::placeholder {
+  color: #4a5568;
+  /* 範例文字為較深的灰色 */
+  font-weight: 400;
 }
 
 input:focus,

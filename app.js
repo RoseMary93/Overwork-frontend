@@ -295,10 +295,14 @@ function renderHeatmap() {
     hoursMap[dateStr] += Number(log.duration_hours);
   });
 
-  days.forEach((date) => {
+  days.forEach((date, index) => {
     const dateStr = date.toISOString().split("T")[0];
     const hours = hoursMap[dateStr] || 0;
     const dayDate = date.getDate();
+    const month = date.getMonth() + 1;
+
+    // 如果是網格第一格或是每月的 1 號，顯示 M/D
+    const displayDate = (index === 0 || dayDate === 1) ? `${month}/${dayDate}` : dayDate;
 
     let level = 0;
     if (hours > 0) level = 1;
@@ -308,7 +312,7 @@ function renderHeatmap() {
 
     const el = document.createElement("div");
     el.className = `heatmap-day level-${level}`;
-    el.textContent = dayDate; // 顯示日期在格子上
+    el.textContent = displayDate; // 顯示日期在格子上
     el.dataset.date = `${dateStr.slice(5)}: ${hours}hr`; // Tooltip content
     el.title = `${dateStr}: ${hours}小時`; // Native tooltip
 
@@ -581,7 +585,7 @@ registerForm.addEventListener("submit", async (e) => {
 });
 
 logoutBtn.addEventListener("click", logout);
-btnAddWorklog.addEventListener("click", openAddWorklogModal);
+btnAddWorklog.addEventListener("click", () => openAddWorklogModal());
 btnExport.addEventListener("click", exportLastMonthReport);
 
 // ===== Initialize =====
