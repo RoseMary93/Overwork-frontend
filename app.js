@@ -128,6 +128,35 @@ function formatExcelDate(value) {
   return value;
 }
 
+// 根據加班時數給予回應
+function getOvertimeMessage(hours) {
+  if (hours <= 0.5) return "效率很高喔~下班下班";
+  if (hours <= 1) return "辛苦了！吃飯去";
+  if (hours <= 1.5) return "趕快回家休息吧！";
+  if (hours <= 2) return "有點晚了，回家注意安全！";
+  if (hours <= 2.5) return "現在才下班，回家只能洗洗睡了(T T)";
+  if (hours <= 3) return "為什麼要加班到這麼晚！";
+  if (hours <= 4) return "多工作半天，薪水有變多嗎？";
+  if (hours <= 5) return "有這麼多事怎麼不隔天再做(o_o)";
+  if (hours <= 6) return "要不要直接睡在公司？";
+  return "「up3h;6vmp4vu6，ji3ru04u4su3xu656~」";
+}
+
+// 根據本月加班時數給予評語
+function getMonthlyComment(totalHours) {
+  if (totalHours === 0) return "本月還沒加班，保持下去！";
+  if (totalHours <= 5) return "加班時數還算正常，繼續保持！";
+  if (totalHours <= 10) return "有點累了吧？記得休息喔~";
+  if (totalHours <= 15) return "加班有點多了，注意身體！";
+  if (totalHours <= 20) return "這個月辛苦了，多休息吧！";
+  if (totalHours <= 25) return "加班時數偏高，要注意健康喔！";
+  if (totalHours <= 30) return "工作狂？記得適度休息！";
+  if (totalHours <= 35) return "這樣下去會過勞的...";
+  if (totalHours <= 40) return "已經快到極限了，好好照顧自己！";
+  if (totalHours <= 46) return "嚴重超時！該考慮換工作了嗎？";
+  return "超過勞基法上限了喔~是不是該離職呢xd";
+}
+
 // ===== Data Loading =====
 async function loadWorklogs() {
   try {
@@ -225,6 +254,12 @@ function updateSummary() {
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   });
+
+  // 更新本月評語
+  const monthlyCommentEl = document.getElementById("monthly-comment");
+  if (monthlyCommentEl) {
+    monthlyCommentEl.textContent = getMonthlyComment(currentTotal);
+  }
 }
 
 function renderHeatmap() {
@@ -372,7 +407,8 @@ async function openAddWorklogModal() {
         body: JSON.stringify(formValues),
       });
       await loadWorklogs();
-      Swal.fire("成功", "加班紀錄已儲存", "success");
+      const message = getOvertimeMessage(formValues.duration_hours);
+      Swal.fire("成功", message, "success");
     } catch (error) {
       Swal.fire("失敗", error.message, "error");
     }
