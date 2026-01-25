@@ -179,7 +179,10 @@ function renderWorklogs() {
     return;
   }
 
-  worklogList.innerHTML = worklogs
+  // 近期紀錄：固定顯示近5次加班紀錄
+  const recentLogs = worklogs.slice(0, 5);
+
+  worklogList.innerHTML = recentLogs
     .map((log) => {
       const displayDate = formatExcelDate(log.date);
       return `
@@ -267,11 +270,20 @@ function renderHeatmap() {
   heatmapGrid.innerHTML = "";
 
   const today = new Date();
-  // Generate last 28 days (4 weeks)
+
+  // 計算本週日 (作為結束日期，確保排版是完整的週)
+  // getDay(): 0 is Sunday, 1 is Monday...
+  const dayOfWeek = today.getDay();
+  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+  const endDate = new Date(today);
+  endDate.setDate(today.getDate() + daysUntilSunday);
+
+  // Generate 28 days (4 weeks) ending on this Sunday
+  // Start date will be a Monday
   const days = [];
   for (let i = 27; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
+    const d = new Date(endDate);
+    d.setDate(endDate.getDate() - i);
     days.push(d);
   }
 
@@ -286,6 +298,7 @@ function renderHeatmap() {
   days.forEach((date) => {
     const dateStr = date.toISOString().split("T")[0];
     const hours = hoursMap[dateStr] || 0;
+    const dayDate = date.getDate();
 
     let level = 0;
     if (hours > 0) level = 1;
@@ -295,10 +308,32 @@ function renderHeatmap() {
 
     const el = document.createElement("div");
     el.className = `heatmap-day level-${level}`;
-    el.dataset.date = `${dateStr.slice(5)}: ${hours}hr`; // Show MM-DD
-    el.title = `${dateStr}: ${hours}小時`;
+    el.textContent = dayDate; // 顯示日期在格子上
+    el.dataset.date = `${dateStr.slice(5)}: ${hours}hr`; // Tooltip content
+    el.title = `${dateStr}: ${hours}小時`; // Native tooltip
+
+    // 點擊事件：新增或修改
+    el.onclick = () => handleHeatmapClick(dateStr);
+
     heatmapGrid.appendChild(el);
   });
+}
+
+// 處理熱力圖點擊
+async function handleHeatmapClick(dateStr) {
+  // 檢查當天是否已有紀錄
+  const existingLog = worklogs.find(log => formatExcelDate(log.date) === dateStr);
+
+  if (existingLog) {
+    // 有紀錄 -> 編輯
+    window.editWorklog(existingLog.id);
+  } else {
+    // 無紀錄 -> 新增 (帶入日期)
+    // 這裡我們需要修改 openAddWorklogModal 讓它可以接收日期
+    // 由於 openAddWorklogModal 在下面定義，我們可以直接調用並傳參
+    // 但是原始函數不接受參數，需要先修改它
+    await openAddWorklogModal(dateStr);
+  }
 }
 
 function exportLastMonthReport() {
@@ -345,8 +380,8 @@ function exportLastMonthReport() {
 
 // ===== Modals =====
 
-async function openAddWorklogModal() {
-  const today = new Date().toISOString().split("T")[0];
+async function openAddWorklogModal(defaultDate = null) {
+  const today = defaultDate || new Date().toISOString().split("T")[0];
 
   const { value: formValues } = await Swal.fire({
     title: "紀錄加班",
