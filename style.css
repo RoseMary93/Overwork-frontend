@@ -189,7 +189,8 @@ select {
   background: rgba(10, 22, 40, 0.5);
   font-family: inherit;
   font-size: 1rem;
-  color: var(--text-color);
+  color: #f9d065;
+  /* 改為米黃色 */
   outline: none;
   transition: border-color 0.2s, background 0.2s;
 }
@@ -841,4 +842,111 @@ div:where(.swal2-container) div:where(.swal2-popup) {
   width: 10px;
   height: 10px;
   border-radius: 2px;
+}
+
+/* ===== Background Animation (Bubbles) ===== */
+.bubbles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: floatUp 15s linear infinite;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.bubble:nth-child(1) {
+  width: 80px;
+  height: 80px;
+  left: 10%;
+  animation-duration: 25s;
+  animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+  width: 40px;
+  height: 40px;
+  left: 20%;
+  animation-duration: 20s;
+  animation-delay: 2s;
+}
+
+.bubble:nth-child(3) {
+  width: 60px;
+  height: 60px;
+  left: 35%;
+  animation-duration: 22s;
+  animation-delay: 4s;
+}
+
+.bubble:nth-child(4) {
+  width: 100px;
+  height: 100px;
+  left: 50%;
+  animation-duration: 28s;
+  animation-delay: 0s;
+}
+
+.bubble:nth-child(5) {
+  width: 30px;
+  height: 30px;
+  left: 65%;
+  animation-duration: 18s;
+  animation-delay: 1s;
+}
+
+.bubble:nth-child(6) {
+  width: 70px;
+  height: 70px;
+  left: 80%;
+  animation-duration: 24s;
+  animation-delay: 3s;
+}
+
+.bubble:nth-child(7) {
+  width: 50px;
+  height: 50px;
+  left: 90%;
+  animation-duration: 20s;
+  animation-delay: 5s;
+}
+
+.bubble:nth-child(8) {
+  width: 90px;
+  height: 90px;
+  left: 25%;
+  animation-duration: 26s;
+  animation-delay: 7s;
+}
+
+@keyframes floatUp {
+  0% {
+    bottom: -100px;
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.8;
+  }
+
+  80% {
+    opacity: 0.8;
+  }
+
+  100% {
+    bottom: 120%;
+    transform: translateX(50px);
+    opacity: 0;
+  }
 }
