@@ -403,7 +403,7 @@ async function openAddWorklogModal(defaultDate = null) {
         </div>
         <div class="form-group">
           <label>時數 (小時)</label>
-          <input type="number" id="swal-hours" class="swal2-input" placeholder="0.5" step="0.5" min="0" required>
+          <input type="number" id="swal-hours" class="swal2-input" placeholder="0.5" step="0.5" min="0" max="24" required>
         </div>
         <div class="form-group">
           <label>加班原因</label>
@@ -428,6 +428,13 @@ async function openAddWorklogModal(defaultDate = null) {
 
       if (!date || !hours || !reason) {
         Swal.showValidationMessage("請填寫日期、時數與原因");
+        return false;
+      }
+
+      // 驗證時數範圍
+      const hoursError = validateOvertimeHours(hours);
+      if (hoursError) {
+        Swal.showValidationMessage(hoursError);
         return false;
       }
 
@@ -466,7 +473,6 @@ async function openAddWorklogModal(defaultDate = null) {
       });
 
       if (overwriteResult.isConfirmed) {
-        // 用戶選擇覆蓋，執行更新
         Swal.fire({
           title: "更新中...",
           didOpen: () => Swal.showLoading(),
@@ -484,11 +490,9 @@ async function openAddWorklogModal(defaultDate = null) {
           Swal.fire("失敗", error.message, "error");
         }
       }
-      // 如果取消，則什麼都不做，回到紀錄頁面
       return;
     }
 
-    // 沒有現存紀錄，正常新增
     Swal.fire({
       title: "處理中...",
       didOpen: () => Swal.showLoading(),
@@ -524,7 +528,7 @@ window.editWorklog = async function (id) {
         <div class="form-group">
           <label>時數 (小時)</label>
           <input type="number" id="swal-hours" class="swal2-input" value="${log.duration_hours
-      }" step="0.5" min="0" required>
+      }" step="0.5" min="0" max="24" required>
         </div>
         <div class="form-group">
           <label>加班原因</label>
@@ -551,6 +555,13 @@ window.editWorklog = async function (id) {
 
       if (!date || !hours || !reason) {
         Swal.showValidationMessage("請填寫日期、時數與原因");
+        return false;
+      }
+
+      // 驗證時數範圍
+      const hoursError = validateOvertimeHours(hours);
+      if (hoursError) {
+        Swal.showValidationMessage(hoursError);
         return false;
       }
 
@@ -604,6 +615,41 @@ window.deleteWorklog = async function (id) {
   }
 };
 
+// ===== 新增驗證函數 =====
+function validateUsername(username) {
+  if (!username || username.length === 0) {
+    return "帳號不能為空";
+  }
+  if (username.length < 3) {
+    return "帳號至少需要3個字元";
+  }
+  return null;
+}
+
+function validatePassword(password) {
+  if (!password || password.length === 0) {
+    return "密碼不能為空";
+  }
+  if (password.length < 6 || password.length > 15) {
+    return "密碼長度需為 6~15 碼";
+  }
+  // 檢查英數混合
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  if (!hasLetter || !hasNumber) {
+    return "密碼必須英數混合（至少包含1個字母和1個數字）";
+  }
+  return null;
+}
+
+function validateOvertimeHours(hours) {
+  const numHours = Number(hours);
+  if (isNaN(numHours) || numHours < 0 || numHours > 24) {
+    return "加班時數需為 0~24 之間";
+  }
+  return null;
+}
+
 // ===== Event Listeners =====
 goLoginBtn.addEventListener("click", showLogin);
 goRegisterLink.addEventListener("click", showRegister);
@@ -625,9 +671,28 @@ loginForm.addEventListener("submit", async (e) => {
 
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const username = document.getElementById("reg-username").value;
-  const displayName = document.getElementById("reg-display-name").value;
+  const username = document.getElementById("reg-username").value.trim();
+  const displayName = document.getElementById("reg-display-name").value.trim();
   const password = document.getElementById("reg-password").value;
+
+  // 驗證帳號
+  const usernameError = validateUsername(username);
+  if (usernameError) {
+    Swal.fire("驗證失敗", usernameError, "error");
+    return;
+  }
+
+  // 驗證密碼
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    Swal.fire("驗證失敗", passwordError, "error");
+    return;
+  }
+
+  if (!displayName) {
+    Swal.fire("驗證失敗", "顯示名稱不能為空", "error");
+    return;
+  }
 
   try {
     await register(username, password, displayName);
