@@ -140,6 +140,13 @@ h1 {
   align-items: center;
 }
 
+/* 新增：讓註冊頁卡片置中 */
+#register-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .login-card {
   background: var(--card-bg);
   padding: 30px;
@@ -1080,7 +1087,7 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 .swal2-html-container,
 .swal2-text {
   color: #c5cce0 !important;
-  /* 淺藍灰字體，稍微淡一點 */
+  /* 淺藜灰字體，稍微淡一點 */
   font-size: 1rem !important;
   font-weight: 400 !important;
 }
