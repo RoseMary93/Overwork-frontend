@@ -179,8 +179,14 @@ function renderWorklogs() {
     return;
   }
 
-  // 近期紀錄：固定顯示近5次加班紀錄
-  const recentLogs = worklogs.slice(0, 5);
+  // 按日期排序（新到舊），然後取前5筆
+  const sortedLogs = [...worklogs].sort((a, b) => {
+    const dateA = new Date(formatExcelDate(a.date));
+    const dateB = new Date(formatExcelDate(b.date));
+    return dateB - dateA; // 新的日期在前
+  });
+
+  const recentLogs = sortedLogs.slice(0, 5);
 
   worklogList.innerHTML = recentLogs
     .map((log) => {
