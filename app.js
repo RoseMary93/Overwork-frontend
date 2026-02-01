@@ -63,10 +63,10 @@ async function login(username, password) {
   return data;
 }
 
-async function register(username, password, display_name) {
+async function register(username, password, display_name, email) {
   const data = await api("/auth/register", {
     method: "POST",
-    body: JSON.stringify({ username, password, display_name }),
+    body: JSON.stringify({ username, password, display_name, email }),
   });
   token = data.token;
   currentUser = data.user;
@@ -626,6 +626,18 @@ function validateUsername(username) {
   return null;
 }
 
+function validateEmail(email) {
+  if (!email || email.length === 0) {
+    return "信箱不能為空";
+  }
+  // 基本 email 驗證
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return "請輸入有效的信箱格式 (例如: example@gmail.com)"; // 自訂訊息
+  }
+  return null;
+}
+
 function validatePassword(password) {
   if (!password || password.length === 0) {
     return "密碼不能為空";
@@ -673,12 +685,21 @@ registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const username = document.getElementById("reg-username").value.trim();
   const displayName = document.getElementById("reg-display-name").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
   const password = document.getElementById("reg-password").value;
+  const confirmPassword = document.getElementById("reg-confirm-password").value;
 
   // 驗證帳號
   const usernameError = validateUsername(username);
   if (usernameError) {
     Swal.fire("驗證失敗", usernameError, "error");
+    return;
+  }
+
+  // 驗證信箱
+  const emailError = validateEmail(email);
+  if (emailError) {
+    Swal.fire("驗證失敗", emailError, "error");
     return;
   }
 
@@ -689,13 +710,19 @@ registerForm.addEventListener("submit", async (e) => {
     return;
   }
 
+  // 驗證密碼一致
+  if (password !== confirmPassword) {
+    Swal.fire("驗證失敗", "密碼不一致，請重新輸入", "error");
+    return;
+  }
+
   if (!displayName) {
     Swal.fire("驗證失敗", "顯示名稱不能為空", "error");
     return;
   }
 
   try {
-    await register(username, password, displayName);
+    await register(username, password, displayName, email);
     showMain();
     Swal.fire("歡迎加入", "註冊成功！", "success");
   } catch (error) {
