@@ -435,6 +435,54 @@ async function openAddWorklogModal(defaultDate = null) {
   });
 
   if (formValues) {
+    // 檢查該日期是否已有紀錄
+    const existingLog = worklogs.find(
+      (log) => formatExcelDate(log.date) === formValues.date
+    );
+
+    if (existingLog) {
+      // 該日期已有紀錄，詢問是否覆蓋
+      const overwriteResult = await Swal.fire({
+        title: "該日期已有紀錄",
+        html: `
+          <div style="text-align: left; color: #c5cce0;">
+            <p><strong>日期：</strong> ${formValues.date}</p>
+            <p><strong>原有時數：</strong> ${existingLog.duration_hours} 小時</p>
+            <p><strong>原有原因：</strong> ${existingLog.reason}</p>
+            <p style="margin-top: 16px; color: #e0e7ff;"><strong>要覆蓋此紀錄嗎？</strong></p>
+          </div>
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "覆蓋",
+        cancelButtonText: "取消",
+        confirmButtonColor: "#ff7675",
+      });
+
+      if (overwriteResult.isConfirmed) {
+        // 用戶選擇覆蓋，執行更新
+        Swal.fire({
+          title: "更新中...",
+          didOpen: () => Swal.showLoading(),
+        });
+
+        try {
+          await api(`/api/worklogs/${existingLog.id}`, {
+            method: "PUT",
+            body: JSON.stringify(formValues),
+          });
+          await loadWorklogs();
+          const message = getOvertimeMessage(formValues.duration_hours);
+          Swal.fire("成功", `已覆蓋紀錄。${message}`, "success");
+        } catch (error) {
+          Swal.fire("失敗", error.message, "error");
+        }
+      }
+      // 如果取消，則什麼都不做，回到紀錄頁面
+      return;
+    }
+
+    // 沒有現存紀錄，正常新增
     Swal.fire({
       title: "處理中...",
       didOpen: () => Swal.showLoading(),
