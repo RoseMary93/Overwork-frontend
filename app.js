@@ -134,12 +134,12 @@ function getOvertimeMessage(hours) {
   if (hours <= 1) return "辛苦了！吃飯去";
   if (hours <= 1.5) return "趕快回家休息吧！";
   if (hours <= 2) return "有點晚了，回家注意安全！";
-  if (hours <= 2.5) return "現在才下班，回家只能洗洗睡了(T T)";
+  if (hours <= 2.5) return "現在才下班，回家只能洗洗睡了QQ";
   if (hours <= 3) return "為什麼要加班到這麼晚！";
   if (hours <= 4) return "多工作半天，薪水有變多嗎？";
   if (hours <= 5) return "有這麼多事怎麼不隔天再做(o_o)";
   if (hours <= 6) return "要不要直接睡在公司？";
-  return "「up3h;6vmp4vu6，ji3ru04u4su3xu656~」";
+  return "「這是正常人該有的加班時數嗎~要不要考慮離職~」";
 }
 
 // 根據本月加班時數給予評語
@@ -153,7 +153,7 @@ function getMonthlyComment(totalHours) {
   if (totalHours <= 30) return "工作狂？記得適度休息！";
   if (totalHours <= 35) return "這樣下去會過勞的...";
   if (totalHours <= 40) return "已經快到極限了，好好照顧自己！";
-  if (totalHours <= 46) return "嚴重超時！該考慮換工作了嗎？";
+  if (totalHours <= 46) return "加太多了吧！加班費有拿到嗎？";
   return "超過勞基法上限了喔~是不是該離職呢xd";
 }
 
